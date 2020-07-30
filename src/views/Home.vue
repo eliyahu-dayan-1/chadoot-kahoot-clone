@@ -1,18 +1,55 @@
 <template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
-</template>
+  <main class="main-home ">
+    <introduction></introduction>
+    <quiz-filter  @setFilter="setFilter"></quiz-filter>
+    <quiz-list v-if="this.quizs.length" :quizs="quizsToShow"></quiz-list>
+  </main>
+</template>  
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
+import quizService from "@/services/quiz.service.js";
+import QuizFilter from "@/components/quiz-filter.vue";
+import Introduction from "@/components/introduction.vue";
+import QuizList from "@/components/quiz-list.vue";
 
 export default {
-  name: 'Home',
+  name: "quiz-home",
+  data() {
+    return {
+      quizs: [],
+      filterBy: null
+    };
+  },
+  computed: {
+    quizsToShow() {
+      var filter = this.filterBy;
+      if (!filter) return this.quizs;
+      var quizsToShow = [...this.quizs];
+      return quizsToShow.filter(quiz => {
+        return (
+          quiz.name.toLowerCase().includes(filter.searchStr.toLowerCase()) ||
+          quiz.description
+            .toLowerCase()
+            .includes(filter.searchStr.toLowerCase())
+        );
+      });
+    }
+  },
+  methods: {
+    setFilter(filterBy) {
+      this.filterBy = { ...filterBy };
+    }
+  },
+
+  async created() {
+    this.quizs = await quizService.getQuizs();
+    console.log(this.quizs);
+    // eventBus.$on("quizSaved", this.saveQuiz);
+  },
   components: {
-    HelloWorld
+    QuizFilter,
+    QuizList,
+    Introduction,
   }
-}
+};
 </script>

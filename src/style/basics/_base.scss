@@ -1,0 +1,52 @@
+* {
+    box-sizing: border-box;
+}
+
+html {
+    line-height: normal; /* ? */
+}
+
+body {
+    font-family: $fnt-montserrat-r;
+    margin: 0;
+    background-color: #f2f2f2;
+    padding: 0;
+}
+
+main {
+    flex-grow: 1;
+}
+
+.app-container{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    // font-family: 'Open Sans', sans-serif;
+    font-weight: 500;
+    line-height: 1.2em;
+    margin: 0;
+}
+
+a,
+button {
+    background: 0;
+    outline: none;
+    border: 0;
+    padding: 0;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    text-align: initial;
+}
+
+input {
+    outline: none;
+}

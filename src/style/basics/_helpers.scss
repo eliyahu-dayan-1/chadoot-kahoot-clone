@@ -1,0 +1,102 @@
+// Font Sizes
+.fs12 { font-size: rem(12px); }
+.fs14 { font-size: rem(14px); }
+.fs18 { font-size: rem(18px); }
+.fs20 { font-size: rem(20px); }
+.fs24 { font-size: rem(24px); }
+.fs28 { font-size: rem(28px); }
+.fs30 { font-size: rem(30px); }
+
+// flex helpers
+
+.flex {
+    display: flex;
+
+    > *.full {
+        flex: 1;
+    }
+    &.column {
+        flex-direction: column;
+    }
+    &.justify-center {
+        justify-content: center;
+    }
+    &.align-center {
+        align-items: center;
+    }
+    &.space-between {
+        justify-content: space-between;
+    }
+    &.space-around {
+        justify-content: space-around;
+    }
+    &.align-start {
+        align-items: flex-start;
+    }
+    &.wrap {
+        flex-wrap: wrap;
+    }
+}
+
+.grid {
+    display: grid;
+
+    &.full {
+        grid-column: 1 / -1;
+    }
+}
+
+// Text helpers
+.text-center{
+    text-align: center;
+}
+
+// Media helpers
+
+.square-ratio {
+    @include aspect-ratio(1, 1);
+}
+.video-ratio {
+    @include aspect-ratio(16, 9);
+}
+.portrait-ratio {
+    @include aspect-ratio(9, 16);
+}
+
+//Mrgins
+.margin-right-26{
+    margin-right: 25.5px;
+}
+.opacity-one{
+    visibility: visible !important;
+    opacity: 1 !important;
+    height: 60px !important;
+}
+.calendar-fade{
+    visibility: visible !important;
+    opacity: 1 !important;
+    top: 13.2% !important;
+}
+.opacity-robot{
+    opacity: 1 !important;
+}
+.fade-input{
+    display: block !important;
+    opacity: 1 !important;
+}
+
+.cursor{
+    cursor: pointer;
+}
+
+.index-1{
+    z-index: 1;
+}
+
+.display-none{
+    display: none;
+}
+
+.hidden{
+    visibility: hidden;
+}
