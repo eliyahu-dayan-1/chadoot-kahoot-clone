@@ -9,7 +9,6 @@ html {
 body {
     font-family: $fnt-montserrat-r;
     margin: 0;
-    background-color: #f2f2f2;
     padding: 0;
 }
 
@@ -17,7 +16,8 @@ main {
     flex-grow: 1;
 }
 
-.app-container{
+.app-container {
+    background-color: #f2f2f2;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
@@ -45,6 +45,17 @@ button {
     color: black;
     cursor: pointer;
     text-align: initial;
+    font-family: $fnt-montserrat-r;
+    font-size: 15px;
+    outline: none !important;
+    &:hover {
+        color: inherit;
+        text-decoration: none;
+    }
+}
+
+label{
+    cursor: pointer;
 }
 
 input {

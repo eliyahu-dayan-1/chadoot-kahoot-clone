@@ -29,8 +29,19 @@
     content: url("~@/assets/imgs/false.svg");
     width: 20px;
 }
+
+.black-false-icon {
+    content: url("~@/assets/imgs/black-false-icon.svg");
+    width: 20px;
+}
+
 .true-icon {
     content: url("~@/assets/imgs/true.svg");
+    width: 30px;
+}
+
+.black-true-icon {
+    content: url("~@/assets/imgs/black-true-icon.svg");
     width: 30px;
 }
 
@@ -50,4 +61,25 @@
 
 .pentagon-icon {
     content: url("~@/assets/imgs/pentagon.svg");
+}
+
+.refresh-icon {
+    content: url("~@/assets/imgs/refresh.svg");
+}
+
+.back-icon {
+    content: url("~@/assets/imgs/back.svg");
+}
+
+.plus-white {
+    content: url("~@/assets/imgs/plus-white.svg");
+    width: 10px;
+}
+
+.up-arrow {
+    content: url("~@/assets/imgs/up-arrow.svg");
+}
+
+.upload-icon {
+    content: url("~@/assets/imgs/upload.svg");
 }

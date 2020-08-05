@@ -1,6 +1,6 @@
 <template>
-  <main class="main-home ">
-    <introduction></introduction>
+  <main class="main-home flex column align-center ">
+    <!--<introduction></introduction>-->
     <quiz-filter  @setFilter="setFilter"></quiz-filter>
     <quiz-list v-if="this.quizs.length" :quizs="quizsToShow"></quiz-list>
   </main>
@@ -53,3 +53,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.main-home{
+  padding-bottom: 20px;
+}
+</style>

@@ -15,7 +15,8 @@ export default {
 
 .intro {
 //   animation: zoominoutsinglefeatured 2s ease-in;
-  font-size: 25vh;
+    font-size: 100px;
+    font-family: $fnt-montserrat-x-b;
 }
 
 .slide-fade-enter-active {

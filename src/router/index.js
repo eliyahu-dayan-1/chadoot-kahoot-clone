@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import Edit from '../views/edit.vue'
 import QuizDetails from '../views/quiz-details.vue'
 import Game from '../views/game.vue'
 
@@ -11,6 +12,11 @@ Vue.use(VueRouter)
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/create/:quizId?',
+    name: 'Edit',
+    component: Edit
   },
   {
     path: '/about',

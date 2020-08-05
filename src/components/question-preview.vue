@@ -45,7 +45,8 @@ export default {
 </script>
 
 <style lang="scss">
-.question-preview {
+.question-preview
+.question-preview-edit{
   width: 100%;
   margin-bottom: 30px;
 
@@ -55,9 +56,7 @@ export default {
   }
 
   .question-details {
-    overflow: hidden;
-
-    position: relative;
+    // overflow: hidden;
     background-color: white;
     min-height: 100px;
     width: 100%;
@@ -73,7 +72,9 @@ export default {
       font-family: Montserrat-b;
     }
 
+
     img {
+      position: relative;
       // height: -webkit-fill-available;
       object-fit: cover;
       width: 11.3125rem;

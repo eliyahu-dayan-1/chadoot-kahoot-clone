@@ -5,14 +5,19 @@
     <choose-nick-name v-if="this.gameMode" :gameMode="this.gameMode" @setUserName="setUserName"></choose-nick-name>
 
     <intro-game v-if="this.gameMode == 'intro'" :introWord="this.introWord"></intro-game>
+    <game-over v-if="this.gameMode == 'gameOver'"></game-over>
 
-    <ans-statistic v-if="this.gameMode == 'showTrueAnswer'"></ans-statistic>
-    <game-statistic v-if="this.gameMode == 'statistics'"></game-statistic>
+<!---->
+    <ans-statistic v-if="this.quiz && this.gameMode == 'showTrueAnswer'" :countAns="this.countAnswers[this.currQuestionIdx]" :answers="this.quiz.questions[this.currQuestionIdx].answers" ></ans-statistic>
+    <game-statistic v-if="this.gameMode == 'statistics'" :scoreStatus="this.quiz.scoreStatus" ></game-statistic> 
 
-    <div
-      class="question-title"
-      v-if="this.gameMode == 'showQuestion' || this.gameMode == 'showAnswers' "
-    >{{this.quiz.questions[0].title}}</div>
+    <div 
+    class="question-preview-game flex column align-center"
+    v-if="this.gameMode == 'showAnswers' || this.gameMode == 'showQuestion'"    
+    >
+      <div class="question-title">{{this.quiz.questions[this.currQuestionIdx].title}}</div>
+      <img :src="this.quiz.questions[this.currQuestionIdx].img" />
+    </div>
 
     <answer-option
       v-if="this.gameMode == 'showTrueAnswer' || this.gameMode == 'showAnswers'"
@@ -32,8 +37,9 @@ import BackgroundGame from "@/components/background-game.vue";
 import AnswerOption from "@/components/answer-option.vue";
 import ChooseNickName from "@/components/choose-nick-name.vue";
 import IntroGame from "@/components/intro-game.vue";
-import GameStatistic from "@/components/ans-statistic.vue";
-import AnsStatistic from "@/components/game-statistic.vue";
+import AnsStatistic from "@/components/ans-statistic.vue";
+import GameStatistic from "@/components/game-statistic.vue";
+import GameOver from "@/components/game-over.vue";
 
 export default {
   name: "game",
@@ -49,68 +55,9 @@ export default {
       isChooseIsCorrect: null,
       chooseAnsIdx: null,
       score: 0,
-      user: null
+      user: null,
+      countAnswers: null
     };
-  },
-
-  async created() {
-    const { quizId } = this.$route.params;
-    const foundQuiz = await quizService.getQuizById(quizId);
-    this.quiz = foundQuiz;
-    console.log(this.quiz);
-  },
-
-  computed: {},
-  methods: {
-    setUserName(ev) {
-      this.startTime = Date.now();
-      this.gameInterval = setInterval(this.setGameStutus, 1000);
-      this.user = ev.target[0].value;
-    },
-    setChooseAns(isCorrectAns, idx) {
-      console.log("chooseAnsIdx", this.chooseAnsIdx);
-      if (
-        this.isChooseIsCorrect ===
-        null /*  && this.gameMode === "showAnswers" */
-      ) {
-        this.isChooseIsCorrect = isCorrectAns;
-        this.score += isCorrectAns ? 20 : 0;
-        this.chooseAnsIdx = idx;
-        console.log("chooseAnsIdx", this.chooseAnsIdx);
-      }
-    },
-    setGameStutus() {
-      console.log("game mode is " + this.gameMode);
-      console.log("game introWord is " + this.introWord);
-      console.log("question is " + this.currQuestionIdx);
-
-      let currTime = Date.now();
-      let timePassed = currTime - this.startTime;
-
-      if (timePassed <= 9000) {
-        this.gameMode = "intro";
-        if (timePassed < 3000) this.introWord = "ready";
-        else if (timePassed < 6000) this.introWord = "set";
-        else if (timePassed <= 9000) this.introWord = "go";
-        return;
-      }
-
-      if (this.currQuestionIdx < this.quiz.questions.length) {
-        let timePassedCurrQuest = (timePassed - 9000) % 25000;
-        if (timePassedCurrQuest < 5000) this.gameMode = "showQuestion";
-        else if (timePassedCurrQuest < 15000) this.gameMode = "showAnswers";
-        else if (timePassedCurrQuest < 20000) this.gameMode = "showTrueAnswer";
-        else if (timePassedCurrQuest < 24000) this.gameMode = "statistics";
-        else if (timePassedCurrQuest >= 24000) {
-          this.currQuestionIdx++;
-          this.isChooseIsCorrect = null;
-        }
-      } else {
-        clearInterval(this.gameInterval);
-        this.gameMode = "gameOver";
-        console.log("game over");
-      }
-    }
   },
   components: {
     ProgressBarV,
@@ -118,8 +65,79 @@ export default {
     ChooseNickName,
     IntroGame,
     GameStatistic,
+    GameOver,
     AnsStatistic,
     BackgroundGame
+  },
+  async created() {
+    const { quizId } = this.$route.params;
+    this.quiz = await quizService.getQuizById(quizId);
+    this.countAnswers = Array(this.quiz.questions.length).fill(0).map((question, idx) => Array(this.quiz.questions[idx].answers.length).fill(0))
+    console.log(this.quiz);
+  },
+
+  computed: {},
+  methods: {
+    setUserName(ev) {
+      this.startTime = Date.now();
+      this.user = ev.target[0].value;
+      this.gameMode = "intro";
+      this.gameInterval = setInterval(this.setGameStutus, 500);
+      this.quiz.scoreStatus = {[this.user]: 0, fj: 9};
+
+    },
+    setChooseAns(isCorrectAns, idx) {
+      console.log("chooseAnsIdx", this.chooseAnsIdx);
+      if (this.isChooseIsCorrect === null && this.gameMode === "showAnswers") {
+        this.isChooseIsCorrect = isCorrectAns;
+        this.score += isCorrectAns ? 20 : 0;
+        this.quiz.scoreStatus[this.user] = this.score;
+        this.quiz.scoreStatus = {...this.quiz.scoreStatus}
+        this.chooseAnsIdx = idx;
+        this.countAnswers[this.currQuestionIdx][idx]++;
+        console.log("chooseAnsIdx", this.chooseAnsIdx);
+      }
+    },
+    //players count
+    //highscore count
+    setGameStutus() {
+      console.log("game mode is " + this.gameMode);
+      console.log("this.introWord " + this.introWord);
+      console.log("question is " + this.currQuestionIdx);
+
+      // let currTime = ;
+      let timePassed = Date.now() - this.startTime;
+
+      if (
+        timePassed <= 4500 &&
+        this.currQuestionIdx === 0 &&
+        this.gameMode === "intro"
+      ) {
+        console.log("timePassed", timePassed);
+        if (timePassed < 1500) this.introWord = "ready";
+        else if (timePassed < 3000) this.introWord = "set";
+        else if (timePassed <= 4500) this.introWord = "go";
+        return;
+      }
+
+      if (this.currQuestionIdx < this.quiz.questions.length) {
+        let timePassedCurrQuest = (timePassed - 4500) % 24500;
+        console.log(timePassedCurrQuest)
+        if (timePassedCurrQuest < 5000) this.gameMode = "showQuestion";
+        else if (timePassedCurrQuest < 15000) this.gameMode = "showAnswers";
+        else if (timePassedCurrQuest < 20000) this.gameMode = "showTrueAnswer";
+        else if (timePassedCurrQuest < 24000) this.gameMode = "statistics";
+        else if (timePassedCurrQuest >= 24000) {
+          this.currQuestionIdx++;
+          this.isChooseIsCorrect = null;
+          this.chooseAnsIdx = null;
+        }
+      } else {
+        clearInterval(this.gameInterval);
+        this.gameMode = "gameOver";
+        console.log("game over");
+      }
+    }
   }
 };
 </script>
@@ -127,7 +145,6 @@ export default {
 <style scoped lang="scss">
 .main-game {
   // background-image: url("~@/assets/imgs/Snow.webm");
-  height: 100vh;
   position: relative;
   padding: 0 10px 10px 10px;
 
@@ -135,9 +152,16 @@ export default {
     margin: auto auto;
   }
 
-  .question-title {
+  .question-preview-game {
     font-family: $fnt-montserrat-b;
     font-size: 50px;
+    text-align: center;
+    > *:not(:last-child) {
+      margin-bottom: 20px;
+    }
+    img {
+      height: 200px;
+    }
   }
 }
 </style>

@@ -1,16 +1,9 @@
 <template>
-  <div class="bla">
-    <section class="quizs-container">
-      <div
-        class="flex column"
-        v-for="(quiz) in quizs"
-        :key="quiz._id"
-        @click="quizDetailsNav(quiz._id)"
-      >
-        <quiz-preview :quiz="quiz" />
-      </div>
-    </section>
-  </div>
+  <section class="quizs-container">
+    <template v-for="(quiz) in quizs">
+      <quiz-preview :key="quiz._id" :quiz="quiz" />
+    </template>
+  </section>
 </template>
 
 <script>
@@ -38,22 +31,23 @@ export default {
 </script>
 
 <style lang="scss">
-.bla{
-  display: grid;
-  grid-template-columns:  1fr 80vw 1fr;
-}
-
 .quizs-container {
   display: grid;
   grid-column: 2;
-
-  grid-template-columns: repeat(auto-fill, 350px);
   grid-auto-rows: 1fr;
   align-items: center;
   justify-items: center; /* adjusted */
+  grid-gap: 20px;
+  grid-template-columns: repeat(4, 300px);
 
-  //   grid-auto-rows:  350px;
-  grid-gap: 30px;
-  //   grid-auto-flow: row;
+  @include for-wide-layout {
+    grid-template-columns: repeat(3, 300px);
+  }
+  @include for-normal-layout {
+    grid-template-columns: repeat(2, 300px);
+  }
+  @include for-w2-mobile-layout{
+    grid-template-columns: repeat(1, 300px);
+  }
 }
 </style>

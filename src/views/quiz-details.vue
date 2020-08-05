@@ -1,7 +1,10 @@
 <template>
   <main v-if="quiz" class="main-quiz-details flex">
-
-    <choose-player-modal v-if="isChoosePlayerOpen" :quiz="quiz" @toggleChooseModal="toggleChooseModal"></choose-player-modal>
+    <choose-player-modal
+      v-if="isChoosePlayerOpen"
+      :quiz="quiz"
+      @toggleChooseModal="toggleChooseModal"
+    ></choose-player-modal>
     <section class="details-sec">
       <img
         :src="quiz.img"
@@ -19,6 +22,7 @@
         <span>Created by:</span>
         {{quiz.ownerName}}
       </div>
+
       <button class="play" @click="toggleChooseModal">Play</button>
       <router-link
         class="edit"
@@ -29,9 +33,15 @@
 
     <section class="questions-sec">
       <div class="qt-num">Questions ({{quiz.questions.length}})</div>
-      <div class="flex column" v-for="(quest, idx) in quiz.questions" :key="idx">
-        <quetion-preview @toggleIsActive="toggleIsActive" :ansIdxActive="ansIdxActive" :quest="quest" :questIdx="idx"></quetion-preview>
-      </div>
+      <template v-for="(quest, idx) in quiz.questions">
+        <quetion-preview
+          :key="idx"
+          @toggleIsActive="toggleIsActive"
+          :ansIdxActive="ansIdxActive"
+          :quest="quest"
+          :questIdx="idx"
+        ></quetion-preview>
+      </template>
     </section>
   </main>
 </template>
@@ -48,7 +58,7 @@ export default {
     return {
       quiz: null,
       isChoosePlayerOpen: false,
-      ansIdxActive: 0
+      ansIdxActive: null
     };
   },
   components: {
@@ -84,20 +94,27 @@ export default {
 </script>
 
 <style lang="scss">
-.main-quiz-details {
+.main-quiz-details,
+.main-edit {
+  margin-top: 62px;
   margin-right: 20px;
-  position: relative;
+  position: static;
 
   .details-sec {
-    width: 400px;
     background-color: white;
+    position: sticky;
+    width: 400px;
+    top: 0;
+    height: 100vh;
     margin-right: 20px;
-    > *:not(img) {
+
+    > *:not(img):not(label) {
       margin-left: 10px;
       margin-right: 20px;
     }
 
-    img {
+    img,
+    label {
       width: 100%;
       margin-bottom: 10px;
     }
@@ -124,15 +141,23 @@ export default {
     }
 
     button.play,
-    a.edit {
+    a.edit,
+    button.save,
+    button.delete {
       padding: 12px 40px;
       border-radius: 5px;
       box-shadow: inset 0px -7px 0px 0px rgba(0, 0, 0, 0.35);
       font-family: $fnt-montserrat-b;
       color: white;
-      &.play {
+      &.delete {
+        background-color: $red-3;
+      }
+
+      &.play,
+      &.save {
         background-color: $green-2;
       }
+
       &.edit {
         background-color: $blue-3;
         &.is-public {
@@ -148,6 +173,28 @@ export default {
     .qt-num {
       margin-bottom: 20px;
       font-family: $fnt-montserrat-b;
+    }
+  }
+
+  @include for-w2-mobile-layout {
+    flex-direction: column;
+    margin-right: 0;
+
+    .details-sec {
+      position: relative;
+      width: 100%;
+      height: auto;
+      padding-bottom: 15px;
+    }
+
+    .questions-sec {
+      margin: 30px 15px 0 15px;
+    }
+  }
+
+  @include for-normal-layout{
+    .details-sec{
+      width: 320px;
     }
   }
 }

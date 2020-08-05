@@ -11,7 +11,10 @@
         <div :class="shapes[idx] + ' icon'"></div>
         <div>{{answer.text}}</div>
       </div>
-      <div v-if="gameMode === 'showTrueAnswer'" :class="{'true-icon': answer.isCorrect, 'false-icon': !answer.isCorrect}"></div>
+      <div
+        v-if="gameMode === 'showTrueAnswer'"
+        :class="{'true-icon': answer.isCorrect, 'false-icon': !answer.isCorrect}"
+      ></div>
     </button>
   </div>
 </template>
@@ -54,8 +57,12 @@ export default {
     color: white;
     font-size: 20px;
 
-    .true-icon, .false-icon{
+    .false-icon {
       width: 30px;
+    }
+
+    .true-icon {
+      width: 50px;
     }
 
     &.is-choose,

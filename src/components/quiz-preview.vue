@@ -1,5 +1,5 @@
 <template>
-  <router-link class="quiz" :to="`/${quiz.id}`">
+  <router-link class="flex column quiz" :to="`/game/${quiz._id}`">
     <div class="img-container">
       <img
         :src="quiz.img"
@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import QuizIcons from './quiz-icons.vue';
+import QuizIcons from "./quiz-icons.vue";
 
 export default {
   name: "QuizPreview",
   props: ["quiz"],
-  components:{
+  components: {
     QuizIcons
   }
 };
@@ -68,6 +68,8 @@ export default {
 
   .text-container {
     margin-bottom: 30px;
+    flex-grow: 1;
+
     .title {
       font-size: 1rem;
       font-family: Montserrat-x-b;
